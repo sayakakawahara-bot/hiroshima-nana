@@ -42,18 +42,33 @@ body {
 }
 
 /* ========== ナビゲーション（画面表示用） ========== */
-.screen-nav {
+.nav-top-bar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   background: white;
   border-bottom: 1px solid var(--border);
-  padding: 8px 12px;
-  display: flex; align-items: center; gap: 6px;
-  flex-wrap: nowrap; overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
 }
-.screen-nav::-webkit-scrollbar { display: none; }
-.screen-nav-title { font-size: 13px; font-weight: 700; color: var(--purple); margin-right: 8px; }
+.nav-top-row {
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+}
+.screen-nav-title { font-size: 13px; font-weight: 700; color: var(--purple); flex: 1; }
+.nav-current-label {
+  font-size: 11px; color: var(--text-muted);
+  background: #f5f5f5; border-radius: 20px; padding: 3px 10px;
+}
+.nav-toggle-btn {
+  background: var(--purple-light); border: 1px solid #AFA9EC; color: var(--purple);
+  border-radius: 8px; padding: 5px 10px; cursor: pointer; font-family: inherit;
+  font-size: 18px; line-height: 1; flex-shrink: 0;
+}
+.screen-nav {
+  display: none;
+  padding: 6px 12px 10px;
+  gap: 5px;
+  flex-wrap: wrap;
+  background: white;
+}
+.screen-nav.open { display: flex; }
+.screen-nav-title-old { display: none; }
 .nav-btn {
   font-size: 11px; padding: 4px 12px; border-radius: 20px;
   border: 1px solid var(--border); background: #f5f5f5;
@@ -89,8 +104,24 @@ body {
 .page.visible { display: block; }
 
 .page-inner {
-  max-width: 780px; margin: 70px auto 2rem;
-  padding: 0 20px;
+  max-width: 780px; margin: 56px auto 2rem;
+  padding: 0 16px;
+}
+@media (max-width: 600px) {
+  .page-header { padding: 20px 18px 16px; border-radius: 12px; }
+  .page-title { font-size: 20px; }
+  .page-icon { font-size: 36px; right: 14px; top: 14px; }
+  .card { padding: 14px 14px; border-radius: 10px; }
+  .write-box { font-size: 16px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-2-3 { grid-template-columns: 1fr; }
+  .fact-grid { grid-template-columns: 1fr 1fr; }
+  .tl-item { gap: 8px; }
+  .tl-dot { width: 28px; height: 28px; font-size: 12px; }
+  .memo-row { gap: 8px; }
+  .nav-footer-btn { padding: 6px 10px; font-size: 12px; }
+  .closing-card { padding: 20px 16px; }
+  .closing-big { font-size: 18px; }
 }
 
 /* ========== ページヘッダー ========== */
@@ -369,25 +400,31 @@ body {
 <body>
 
 <!-- ===== 画面ナビ ===== -->
-<nav class="screen-nav">
-  <span class="screen-nav-title">🕊️ 広島平和の旅 ワークブック</span>
-  <span style="font-size:10px;font-weight:700;color:var(--purple);letter-spacing:0.05em;">事前</span>
-  <button class="nav-btn phase-pre active" onclick="showPage(0,this)">1 この旅</button>
-  <button class="nav-btn phase-pre" onclick="showPage(1,this)">2 なぜ私？</button>
-  <button class="nav-btn phase-pre" onclick="showPage(2,this)">3 広島を知る</button>
-  <button class="nav-btn phase-pre" onclick="showPage(3,this)">4 原爆を学ぶ</button>
-  <button class="nav-btn phase-pre" onclick="showPage(4,this)">5 行く場所</button>
-  <button class="nav-btn phase-pre" onclick="showPage(5,this)">6 探究テーマ</button>
-  <button class="nav-btn phase-pre" onclick="showPage(6,this)">7 折り鶴</button>
-  <span style="font-size:10px;font-weight:700;color:var(--amber);letter-spacing:0.05em;margin-left:4px;">現地</span>
-  <button class="nav-btn phase-local" onclick="showPage(7,this)">8 学びノート</button>
-  <button class="nav-btn phase-local" onclick="showPage(8,this)">9 マナー</button>
-  <span style="font-size:10px;font-weight:700;color:var(--coral);letter-spacing:0.05em;margin-left:4px;">事後</span>
-  <button class="nav-btn phase-post" onclick="showPage(9,this)">10 帰ってから</button>
-  <button class="nav-btn phase-post" onclick="showPage(10,this)">11 発表準備</button>
-  <button class="nav-btn phase-end" onclick="showPage(11,this)">✦ 締め</button>
-  <button class="print-btn" onclick="window.print()">🖨️ 印刷する</button>
-</nav>
+<div class="nav-top-bar">
+  <div class="nav-top-row">
+    <span class="screen-nav-title">🕊️ 広島平和の旅</span>
+    <span class="nav-current-label" id="nav-current-label">1 この旅</span>
+    <button class="nav-toggle-btn" onclick="toggleNav()" aria-label="メニュー">☰</button>
+  </div>
+  <nav class="screen-nav" id="screen-nav">
+    <span style="font-size:10px;font-weight:700;color:var(--purple);letter-spacing:0.05em;padding-top:2px;">事前</span>
+    <button class="nav-btn phase-pre active" onclick="showPage(0,this)">1 この旅</button>
+    <button class="nav-btn phase-pre" onclick="showPage(1,this)">2 なぜ私？</button>
+    <button class="nav-btn phase-pre" onclick="showPage(2,this)">3 広島を知る</button>
+    <button class="nav-btn phase-pre" onclick="showPage(3,this)">4 原爆を学ぶ</button>
+    <button class="nav-btn phase-pre" onclick="showPage(4,this)">5 行く場所</button>
+    <button class="nav-btn phase-pre" onclick="showPage(5,this)">6 探究テーマ</button>
+    <button class="nav-btn phase-pre" onclick="showPage(6,this)">7 折り鶴</button>
+    <span style="font-size:10px;font-weight:700;color:var(--amber);letter-spacing:0.05em;padding-top:2px;">現地</span>
+    <button class="nav-btn phase-local" onclick="showPage(7,this)">8 学びノート</button>
+    <button class="nav-btn phase-local" onclick="showPage(8,this)">9 マナー</button>
+    <span style="font-size:10px;font-weight:700;color:var(--coral);letter-spacing:0.05em;padding-top:2px;">事後</span>
+    <button class="nav-btn phase-post" onclick="showPage(9,this)">10 帰ってから</button>
+    <button class="nav-btn phase-post" onclick="showPage(10,this)">11 発表準備</button>
+    <button class="nav-btn phase-end" onclick="showPage(11,this)">✦ 締め</button>
+    <button class="print-btn" onclick="window.print()" style="margin-left:auto;">🖨️ 印刷</button>
+  </nav>
+</div>
 
 <!-- ===========================
      PAGE 1: この旅について
@@ -1337,6 +1374,7 @@ body {
 <script>
 var current = 0;
 var total = 12;
+var pageLabels = ['1 この旅','2 なぜ私？','3 広島を知る','4 原爆を学ぶ','5 行く場所','6 探究テーマ','7 折り鶴','8 学びノート','9 マナー','10 帰ってから','11 発表準備','✦ 締め'];
 
 function showPage(n, btn) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('visible'); });
@@ -1345,6 +1383,16 @@ function showPage(n, btn) {
   if (btn) btn.classList.add('active');
   current = n;
   window.scrollTo(0, 0);
+  document.getElementById('nav-current-label').textContent = pageLabels[n];
+  closeNav();
+}
+
+function toggleNav() {
+  var nav = document.getElementById('screen-nav');
+  nav.classList.toggle('open');
+}
+function closeNav() {
+  document.getElementById('screen-nav').classList.remove('open');
 }
 
 function goNext() {
