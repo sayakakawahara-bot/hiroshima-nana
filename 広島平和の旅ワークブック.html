@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>広島平和の旅 ワークブック</title>
+<style>
+/* ========== 基本設定 ========== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --purple: #534AB7;
+  --purple-light: #EEEDFE;
+  --purple-mid: #7F77DD;
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --coral: #993C1D;
+  --coral-light: #FAECE7;
+  --red-light: #FCEBEB;
+  --red: #A32D2D;
+  --blue: #185FA5;
+  --blue-light: #E6F1FB;
+  --green: #3B6D11;
+  --green-light: #EAF3DE;
+  --amber: #854F0B;
+  --amber-light: #FAEEDA;
+  --pink: #993556;
+  --pink-light: #FBEAF0;
+  --text: #1a1a1a;
+  --text-sub: #555;
+  --text-muted: #888;
+  --border: #ddd;
+  --bg: #f7f6f2;
+  --white: #fff;
+}
+
+body {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+/* ========== ナビゲーション（画面表示用） ========== */
+.screen-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.screen-nav-title { font-size: 13px; font-weight: 700; color: var(--purple); margin-right: 8px; }
+.nav-btn {
+  font-size: 11px; padding: 4px 12px; border-radius: 20px;
+  border: 1px solid var(--border); background: #f5f5f5;
+  color: var(--text-sub); cursor: pointer;
+  transition: all 0.15s; font-family: inherit;
+}
+.nav-btn:hover { opacity: 0.85; }
+/* 事前学習（1〜7）紫 */
+.nav-btn.phase-pre { background: #EEEDFe; border-color: #AFA9EC; color: var(--purple); }
+.nav-btn.phase-pre:hover { background: #CECBF6; }
+.nav-btn.phase-pre.active { background: var(--purple); border-color: var(--purple); color: white; }
+/* 現地（8〜9）オレンジ */
+.nav-btn.phase-local { background: #FAEEDA; border-color: #FAC775; color: var(--amber); }
+.nav-btn.phase-local:hover { background: #FAC775; }
+.nav-btn.phase-local.active { background: var(--amber); border-color: var(--amber); color: white; }
+/* 事後学習（10〜11）赤橙 */
+.nav-btn.phase-post { background: #FAECE7; border-color: #F5C4B3; color: var(--coral); }
+.nav-btn.phase-post:hover { background: #F5C4B3; }
+.nav-btn.phase-post.active { background: var(--coral); border-color: var(--coral); color: white; }
+/* 締め　緑 */
+.nav-btn.phase-end { background: #E1F5EE; border-color: #9FE1CB; color: var(--teal); }
+.nav-btn.phase-end:hover { background: #9FE1CB; }
+.nav-btn.phase-end.active { background: var(--teal); border-color: var(--teal); color: white; }
+.print-btn {
+  margin-left: auto; font-size: 12px; padding: 6px 14px;
+  background: var(--purple); color: white; border: none;
+  border-radius: 20px; cursor: pointer; font-family: inherit;
+}
+.print-btn:hover { background: var(--purple-mid); }
+
+/* ========== ページ ========== */
+.page { display: none; }
+.page.visible { display: block; }
+
+.page-inner {
+  max-width: 780px; margin: 80px auto 2rem;
+  padding: 0 20px;
+}
+
+/* ========== ページヘッダー ========== */
+.page-header {
+  border-radius: 18px;
+  padding: 28px 28px 22px;
+  margin-bottom: 20px;
+  position: relative; overflow: hidden;
+}
+.page-header::after {
+  content: '';
+  position: absolute; right: -20px; bottom: -20px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+}
+.phase-badge {
+  display: inline-block; font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.page-num-label { font-size: 12px; opacity: 0.75; margin-bottom: 4px; }
+.page-title { font-size: 26px; font-weight: 700; line-height: 1.3; }
+.page-sub { font-size: 14px; margin-top: 6px; opacity: 0.85; }
+.page-icon {
+  position: absolute; right: 24px; top: 20px;
+  font-size: 52px; opacity: 0.2;
+}
+
+/* ========== カード ========== */
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 13px; font-weight: 700; color: var(--text-sub);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+  border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;
+}
+
+/* ========== 書き込み欄 ========== */
+.write-box {
+  background: #fafaf8;
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  min-height: 80px;
+  padding: 12px 14px;
+  font-size: 14px; font-family: inherit;
+  color: var(--text);
+  width: 100%; resize: vertical;
+  line-height: 1.8;
+  transition: border-color 0.2s;
+}
+.write-box:focus { outline: none; border-color: var(--purple-mid); border-style: solid; }
+.write-box::placeholder { color: #bbb; font-style: italic; }
+
+.write-line {
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--border);
+  border-radius: 0;
+  padding: 8px 4px;
+  font-size: 14px; font-family: inherit;
+  color: var(--text);
+  width: 100%; margin-bottom: 10px;
+}
+.write-line:focus { outline: none; border-bottom-color: var(--purple-mid); }
+.write-line::placeholder { color: #bbb; font-style: italic; }
+
+.q-label {
+  font-size: 12px; color: var(--text-muted);
+  margin-bottom: 5px; display: block; font-weight: 500;
+}
+.q-hint {
+  font-size: 11px; color: #bbb;
+  margin-bottom: 6px; display: block; font-style: italic;
+  padding-left: 2px;
+}
+
+/* ========== インフォブロック ========== */
+.info-block {
+  border-left: 4px solid var(--purple);
+  background: var(--purple-light);
+  border-radius: 0 10px 10px 0;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  color: #3C3489;
+  line-height: 1.7;
+}
+
+/* ========== グリッド ========== */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-2-3 { display: grid; grid-template-columns: 2fr 3fr; gap: 12px; }
+
+/* ========== ファクトカード ========== */
+.fact-card {
+  background: #fafaf8;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+}
+.fact-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+.fact-label { font-size: 11px; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; }
+.fact-val { font-size: 15px; color: var(--text); font-weight: 700; margin-top: 3px; }
+
+/* ========== スポットカード ========== */
+.spot-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.spot-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.spot-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.spot-name { font-size: 16px; font-weight: 700; color: var(--text); }
+.spot-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+.spot-story {
+  background: #fafaf8; border-radius: 8px; padding: 10px 12px;
+  font-size: 12px; color: var(--text-sub); line-height: 1.6;
+  margin-bottom: 10px; border-left: 3px solid var(--border);
+}
+
+/* ========== テーマチップ ========== */
+.theme-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.theme-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--purple-light); color: var(--purple);
+  border-radius: 20px; font-size: 12px; padding: 5px 12px;
+  cursor: pointer; border: 1.5px solid transparent;
+  transition: all 0.15s; font-family: inherit;
+}
+.theme-chip:hover { border-color: var(--purple-mid); }
+.theme-chip.picked { background: var(--purple); color: white; }
+
+/* ========== タイムライン ========== */
+.timeline { position: relative; padding-left: 0; }
+.tl-item {
+  display: flex; gap: 14px; margin-bottom: 16px; align-items: flex-start;
+}
+.tl-dot {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+}
+.tl-content { flex: 1; }
+.tl-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+  color: var(--text-muted); margin-bottom: 3px;
+}
+.tl-text { font-size: 14px; color: var(--text); line-height: 1.7; }
+
+/* ========== メモ行 ========== */
+.memo-row {
+  display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px;
+}
+.memo-icon {
+  font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; padding-top: 2px;
+}
+
+/* ========== マナーチェック ========== */
+.manner-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.manner-item:last-child { border-bottom: none; }
+.manner-check {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--border); flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  background: white; transition: all 0.15s; font-size: 14px; color: white;
+}
+.manner-check.checked { background: var(--purple); border-color: var(--purple); }
+.manner-text { font-size: 14px; color: var(--text); line-height: 1.5; font-weight: 500; }
+.manner-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* ========== ナビフッター ========== */
+.nav-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 20px; padding-top: 14px;
+  border-top: 1px solid #f0f0f0;
+}
+.nav-footer-btn {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-sub); font-weight: 500;
+  background: white; border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 16px; cursor: pointer; font-family: inherit;
+  transition: all 0.15s;
+}
+.nav-footer-btn:hover { background: var(--purple-light); border-color: var(--purple-mid); color: var(--purple); }
+.nav-footer-btn:disabled { opacity: 0.3; cursor: default; }
+
+/* ========== 特殊スタイル ========== */
+.crane-box {
+  background: linear-gradient(135deg, #EEEDFE, #E1F5EE);
+  border-radius: 16px; padding: 20px; margin-bottom: 14px;
+  border: 1px solid #ddd;
+}
+.closing-card {
+  background: var(--purple-light);
+  border-radius: 16px; padding: 28px;
+  margin-bottom: 16px; text-align: center;
+}
+.closing-big { font-size: 22px; font-weight: 700; color: #3C3489; margin-bottom: 10px; }
+.closing-text { font-size: 14px; color: var(--purple); line-height: 1.9; }
+
+.star { font-size: 24px; cursor: pointer; color: #ddd; transition: color 0.1s; }
+.star.lit { color: #EF9F27; }
+
+.badge {
+  display: inline-block; font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px; letter-spacing: 0.05em;
+}
+.badge-pre { background: #E1F5EE; color: #0F6E56; }
+.badge-post { background: #FAECE7; color: #993C1D; }
+.badge-local { background: #FAEEDA; color: #854F0B; }
+
+.think-prompt {
+  background: #fffbf0;
+  border: 1.5px solid #FAEEDA;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--amber);
+  line-height: 1.7;
+}
+.think-prompt::before { content: "💭 "; }
+
+.deep-q {
+  background: var(--purple-light);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--purple);
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+.deep-q::before { content: "🔍 深める質問："; font-weight: 700; display: block; font-size: 11px; margin-bottom: 4px; }
+
+/* ========== 印刷スタイル ========== */
+@media print {
+  body { background: white; font-size: 12px; }
+  .screen-nav { display: none !important; }
+  .nav-footer { display: none !important; }
+  .page { display: block !important; page-break-after: always; }
+  .page-inner { margin: 0; max-width: 100%; padding: 14mm 16mm; }
+  .page-header { padding: 20px 22px 16px; border-radius: 10px; }
+  .page-icon { display: none; }
+  .page-title { font-size: 20px; }
+  .card { border-radius: 8px; padding: 12px 14px; }
+  .write-box { min-height: 60px; font-size: 12px; border-radius: 6px; }
+  .spot-card { border-radius: 8px; }
+  .crane-box { border-radius: 8px; }
+  .closing-card { border-radius: 8px; }
+  textarea, input { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .theme-chip { border: 1px solid var(--purple); }
+  .think-prompt { background: #fffbf0 !important; }
+  .deep-q { background: var(--purple-light) !important; }
+  .info-block { background: var(--purple-light) !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 画面ナビ ===== -->
+<nav class="screen-nav">
+  <span class="screen-nav-title">🕊️ 広島平和の旅 ワークブック</span>
+  <span style="font-size:10px;font-weight:700;color:var(--purple);letter-spacing:0.05em;">事前</span>
+  <button class="nav-btn phase-pre active" onclick="showPage(0,this)">1 この旅</button>
+  <button class="nav-btn phase-pre" onclick="showPage(1,this)">2 なぜ私？</button>
+  <button class="nav-btn phase-pre" onclick="showPage(2,this)">3 広島を知る</button>
+  <button class="nav-btn phase-pre" onclick="showPage(3,this)">4 原爆を学ぶ</button>
+  <button class="nav-btn phase-pre" onclick="showPage(4,this)">5 行く場所</button>
+  <button class="nav-btn phase-pre" onclick="showPage(5,this)">6 探究テーマ</button>
+  <button class="nav-btn phase-pre" onclick="showPage(6,this)">7 折り鶴</button>
+  <span style="font-size:10px;font-weight:700;color:var(--amber);letter-spacing:0.05em;margin-left:4px;">現地</span>
+  <button class="nav-btn phase-local" onclick="showPage(7,this)">8 学びノート</button>
+  <button class="nav-btn phase-local" onclick="showPage(8,this)">9 マナー</button>
+  <span style="font-size:10px;font-weight:700;color:var(--coral);letter-spacing:0.05em;margin-left:4px;">事後</span>
+  <button class="nav-btn phase-post" onclick="showPage(9,this)">10 帰ってから</button>
+  <button class="nav-btn phase-post" onclick="showPage(10,this)">11 発表準備</button>
+  <button class="nav-btn phase-end" onclick="showPage(11,this)">✦ 締め</button>
+  <button class="print-btn" onclick="window.print()">🖨️ 印刷する</button>
+</nav>
+
+<!-- ===========================
+     PAGE 1: この旅について
+     =========================== -->
+<div id="pg0" class="page visible">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--purple-light);">
+    <span class="page-icon">🕊️</span>
+    <div class="page-num-label"><span class="badge badge-pre">事前学習</span> &nbsp;ページ 1</div>
+    <div class="page-title" style="color:#26215C;">この旅について</div>
+    <div class="page-sub" style="color:var(--purple);">広島平和の旅へようこそ。まずは「なぜここへ来るのか」を確かめよう。</div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--purple);">
+    <div class="card-title">🎯 この旅の目的</div>
+    <div class="info-block">
+      広島での平和学習を通じて、戦争の悲惨さや平和の大切さを体で感じ、<strong>「学んだことを次の人へ伝える役割」</strong>を担える人になること。
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px;">
+      <div style="background:#f5f5ff;border-radius:10px;padding:12px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">👁️</div>
+        <div style="font-size:12px;font-weight:700;color:var(--purple);">見る</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">戦争の記録と<br>平和の願いを</div>
+      </div>
+      <div style="background:#f0fbf5;border-radius:10px;padding:12px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">❤️</div>
+        <div style="font-size:12px;font-weight:700;color:var(--teal);">感じる</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">現地の空気・<br>命の重さを</div>
+      </div>
+      <div style="background:#fff8f0;border-radius:10px;padding:12px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">💬</div>
+        <div style="font-size:12px;font-weight:700;color:var(--amber);">伝える</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">帰ってから<br>次の人へ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">❓ なぜ平和について学ぶのか？</div>
+    <div style="font-size:14px;color:var(--text);line-height:1.8;margin-bottom:12px;">
+      平和は「戦争がない状態」だけではありません。<br>
+      毎日の小さな思いやり、相手を尊重すること、誰かの声に耳を傾けること——それが平和の<em>始まり</em>です。<br><br>
+      広島で感じることを、自分の言葉で残しましょう。
+    </div>
+    <div class="think-prompt">「平和」という言葉を聞いて、最初に頭に浮かぶことは何？その理由も考えてみよう。</div>
+    <label class="q-label">あなたが思う「平和」とは何ですか？（旅の前の自分の考え）</label>
+    <textarea class="write-box" rows="4" placeholder="正直に書いてみよう。答えは一つじゃなくていい。"></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📖 この旅で学べること</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--purple);font-weight:700;font-size:16px;flex-shrink:0;">①</span>
+        <span style="font-size:14px;line-height:1.6;">原爆と戦争が人々に何をもたらしたか</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--purple);font-weight:700;font-size:16px;flex-shrink:0;">②</span>
+        <span style="font-size:14px;line-height:1.6;">今も続く影響と、広島の人々の復興への歩み</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--purple);font-weight:700;font-size:16px;flex-shrink:0;">③</span>
+        <span style="font-size:14px;line-height:1.6;">「平和」とは何か、自分はどう生きるかを考える力</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" disabled>← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">1 / 12</span>
+    <button class="nav-footer-btn" onclick="goNext()">次へ →</button>
+  </div>
+</div>
+</div>
+
+<!-- ===========================
+     PAGE 2: なぜ私が選ばれたのか
+     =========================== -->
+<div id="pg1" class="page">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--teal-light);">
+    <span class="page-icon">🌱</span>
+    <div class="page-num-label"><span class="badge badge-pre">事前学習</span> &nbsp;ページ 2</div>
+    <div class="page-title" style="color:#04342C;">私はなぜ選ばれたのだろう？</div>
+    <div class="page-sub" style="color:var(--teal);">答えは一つではない。行く前と後で考えが変わっても大丈夫。</div>
+  </div>
+
+  <div class="info-block" style="background:var(--teal-light);border-color:var(--teal);color:#085041;">
+    誰かに「選んでもらった」のではなく、あなたの中にある何かが、この旅に呼ばれたのかもしれません。
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔍 先生の視点から考えてみよう</div>
+    <div class="think-prompt">もし先生に直接「なぜ私を選んだんですか？」と聞けたとしたら？どんな答えが返ってくると思う？</div>
+    <div class="q-group" style="margin-bottom:12px;">
+      <label class="q-label">先生はなぜ私を推薦したと思う？</label>
+      <textarea class="write-box" rows="2" placeholder="思い当たることを書いてみよう..."></textarea>
+    </div>
+    <div class="q-group" style="margin-bottom:12px;">
+      <label class="q-label">自分のどんなところを期待されたと思う？</label>
+      <textarea class="write-box" rows="2" placeholder="どんな自分を見てくれていたのかな..."></textarea>
+    </div>
+    <div class="deep-q">期待に応えるとは、どういうことだと思う？「期待を超える」ことはできるかな？</div>
+    <label class="q-label">その期待に、自分はどう応えたい？</label>
+    <textarea class="write-box" rows="2" placeholder="具体的に書いてみよう..."></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💪 自分の強みを掘り下げよう</div>
+    <div class="think-prompt">「強み」は目立つことだけじゃない。「気づく力」「聞く力」「続ける力」も大切な強み。</div>
+    <label class="q-label">自分の強みは何だろう？（3つ書いてみよう）</label>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span style="font-size:16px;flex-shrink:0;">①</span>
+        <input type="text" class="write-line" placeholder="例：誰の話もちゃんと聞ける" style="margin-bottom:0;">
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span style="font-size:16px;flex-shrink:0;">②</span>
+        <input type="text" class="write-line" placeholder="例：感じたことを言葉にできる" style="margin-bottom:0;">
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span style="font-size:16px;flex-shrink:0;">③</span>
+        <input type="text" class="write-line" placeholder="例：" style="margin-bottom:0;">
+      </div>
+    </div>
+    <div class="deep-q">その強みは、広島でどんな場面で生かせる？具体的に想像してみよう。</div>
+    <label class="q-label">強みを広島でどう生かせると思う？</label>
+    <textarea class="write-box" rows="2" placeholder="..."></textarea>
+  </div>
+
+  <div class="card" style="border-left:4px solid #EF9F27;background:#fffbf0;">
+    <div class="card-title" style="color:var(--amber);">👨‍👩‍👧 家族に聞いてみよう！</div>
+    <div style="font-size:14px;color:var(--text);line-height:1.8;margin-bottom:12px;">
+      自分では気づいていない強みを、家族は知っているかもしれない。<br>
+      ちょっと恥ずかしいけど、聞いてみよう。
+    </div>
+    <div style="background:#FAEEDA;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--amber);line-height:1.8;">
+      💬 <strong>聞き方の例</strong><br>
+      「広島平和の旅に選ばれたんだけど、私のどんなところが選ばれたと思う？」<br>
+      「私の強みって何だと思う？」
+    </div>
+    <div class="q-group" style="margin-bottom:12px;">
+      <label class="q-label">誰に聞いた？（お父さん・お母さん・おじいちゃん・おばあちゃんなど）</label>
+      <input type="text" class="write-line" placeholder="例：お母さん、おばあちゃん...">
+    </div>
+    <div class="q-group" style="margin-bottom:12px;">
+      <label class="q-label">家族が言ってくれた「私の強み」</label>
+      <textarea class="write-box" rows="3" placeholder="聞いた言葉をそのまま書いてみよう..."></textarea>
+    </div>
+    <div class="q-group" style="margin-bottom:12px;">
+      <label class="q-label">その言葉を聞いて、どう感じた？</label>
+      <textarea class="write-box" rows="2" placeholder="照れた・うれしかった・意外だった...正直な気持ちを書こう"></textarea>
+    </div>
+    <div class="q-group">
+      <label class="q-label">自分が思う強みと、家族が言ってくれた強み、違いはあった？</label>
+      <textarea class="write-box" rows="2" placeholder="同じところ・違うところを比べてみよう..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌟 旅への思いと目標</div>
+    <div class="q-group" style="margin-bottom:12px;">
+      <label class="q-label">この旅でどんな自分になりたい？</label>
+      <textarea class="write-box" rows="2" placeholder="旅を終えた自分を想像してみよう..."></textarea>
+    </div>
+    <div class="q-group" style="margin-bottom:12px;">
+      <label class="q-label">この経験を誰に伝えられるだろう？（家族・友達・クラスの仲間…）</label>
+      <textarea class="write-box" rows="2" placeholder="具体的な人の顔を浮かべながら書こう..."></textarea>
+    </div>
+    <div class="deep-q">「伝える」ためには、自分がしっかり「受け取る」必要がある。広島で何を受け取りたい？</div>
+    <label class="q-label">帰ってきたら、誰に、何を伝えたい？</label>
+    <textarea class="write-box" rows="2" placeholder="..."></textarea>
+  </div>
+
+  <div style="background:var(--teal-light);border-radius:12px;padding:14px 16px;font-size:14px;color:#085041;line-height:1.8;">
+    🌿 「学びを受け取り、それを次の人へつなぐ役割」——それがあなたに期待されていることです。
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" onclick="goPrev()">← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">2 / 12</span>
+    <button class="nav-footer-btn" onclick="goNext()">次へ →</button>
+  </div>
+</div>
+</div>
+
+<!-- ===========================
+     PAGE 3: 広島について知ろう
+     =========================== -->
+<div id="pg2" class="page">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--blue-light);">
+    <span class="page-icon">🌊</span>
+    <div class="page-num-label"><span class="badge badge-pre">事前学習</span> &nbsp;ページ 3</div>
+    <div class="page-title" style="color:#042C53;">広島について知ろう</div>
+    <div class="page-sub" style="color:var(--blue);">「平和の都市」だけじゃない、魅力あふれる広島へ</div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:14px;">
+    <div class="fact-card"><span class="fact-icon">🌊</span><div class="fact-label">人口</div><div class="fact-val">約280万人</div></div>
+    <div class="fact-card"><span class="fact-icon">🏯</span><div class="fact-label">県庁所在地</div><div class="fact-val">広島市</div></div>
+    <div class="fact-card"><span class="fact-icon">🌐</span><div class="fact-label">世界遺産</div><div class="fact-val">2か所</div></div>
+    <div class="fact-card"><span class="fact-icon">🦌</span><div class="fact-label">有名スポット</div><div class="fact-val">宮島・厳島神社</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🏛️ 世界遺産</div>
+    <div class="grid-2">
+      <div style="background:var(--red-light);border-radius:10px;padding:12px;">
+        <div style="font-size:14px;font-weight:700;color:var(--red);margin-bottom:4px;">原爆ドーム</div>
+        <div style="font-size:12px;color:var(--text-sub);line-height:1.6;">核兵器廃絶と平和の大切さを訴え続ける「負の世界遺産」。あの日の建物がそのまま残されている。</div>
+      </div>
+      <div style="background:var(--teal-light);border-radius:10px;padding:12px;">
+        <div style="font-size:14px;font-weight:700;color:var(--teal);margin-bottom:4px;">厳島神社</div>
+        <div style="font-size:12px;color:var(--text-sub);line-height:1.6;">海に浮かぶ朱色の大鳥居。宮島に建つ日本を代表する神社で、満潮時は水の上に浮かんで見える。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🍽️ 広島のおいしいもの</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+      <span style="background:#FAEEDA;color:var(--amber);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:500;">お好み焼き（広島焼き）</span>
+      <span style="background:#FAEEDA;color:var(--amber);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:500;">牡蠣（かき）</span>
+      <span style="background:#FAEEDA;color:var(--amber);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:500;">もみじまんじゅう</span>
+      <span style="background:#FAEEDA;color:var(--amber);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:500;">レモン料理</span>
+    </div>
+    <label class="q-label">食べてみたいものは？（正直に書いていい！）</label>
+    <input type="text" class="write-line" placeholder="楽しみにしていることも大切だよ">
+  </div>
+
+  <div class="card">
+    <div class="card-title">✨ 今の広島の魅力</div>
+    <div style="font-size:14px;color:var(--text);line-height:1.8;margin-bottom:12px;">
+      広島は、原爆から約80年で「国際平和文化都市」として復興しました。カープ（野球）や江田島など、スポーツ・自然・歴史・グルメ、すべてが揃う活気あふれる街です。<br>
+      原爆を経験した広島が、今もこんなに豊かな街になっているのはなぜか——それも広島の大切なメッセージです。
+    </div>
+    <div class="think-prompt">もし「戦争がなかったら今の広島はどうなっていたか」想像してみたら、どう思う？</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">✏️ 調べてみよう！</div>
+    <label class="q-label">広島について調べて気になったことを書いておこう</label>
+    <textarea class="write-box" rows="4" placeholder="地図を見ながら、地理・歴史・食べ物・現在の広島...何でも気になったことを！"></textarea>
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" onclick="goPrev()">← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">3 / 12</span>
+    <button class="nav-footer-btn" onclick="goNext()">次へ →</button>
+  </div>
+</div>
+</div>
+
+<!-- ===========================
+     PAGE 4: 原爆について学ぼう
+     =========================== -->
+<div id="pg3" class="page">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--red-light);">
+    <span class="page-icon">☁️</span>
+    <div class="page-num-label"><span class="badge badge-pre">事前学習</span> &nbsp;ページ 4</div>
+    <div class="page-title" style="color:#501313;">原爆について学ぼう</div>
+    <div class="page-sub" style="color:var(--red);">1945年8月6日に何が起きたのか、まずは知ることから。</div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--red-light);color:var(--red);">①</div>
+      <div class="tl-content">
+        <div class="tl-label">背景——なぜ広島に？</div>
+        <div class="tl-text">第2次世界大戦の末期、アメリカは戦争を早く終わらせるため新型爆弾「原子爆弾」の使用を決めました。広島は軍事都市であり、爆弾の威力を測りやすい地形だったことも理由の一つとされています。</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#F7C1C1;color:#791F1F;">②</div>
+      <div class="tl-content">
+        <div class="tl-label">8月6日 午前8時15分</div>
+        <div class="tl-text">爆撃機B-29が広島上空で原爆を投下。爆心地の温度は数千度に達し、強烈な熱線・爆風・放射線が街を一瞬で包みました。多くの建物が崩れ、年内に約14万人が亡くなったとされています（推定）。</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#E24B4A;color:white;">③</div>
+      <div class="tl-content">
+        <div class="tl-label">どんな被害があったのか</div>
+        <div class="tl-text">熱線・爆風・放射線の三重の被害。家族を一瞬で失った人、重いやけどを負った人、生き残っても長年にわたり体の影響（放射線障害）に苦しんだ人がいます。「被爆者（ひばくしゃ）」と呼ばれる方々は、今もその経験を語り続けています。</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--blue-light);color:var(--blue);">④</div>
+      <div class="tl-content">
+        <div class="tl-label">現在まで続く影響</div>
+        <div class="tl-text">放射線による健康への影響、家族・友人を失った悲しみ、偏見や差別……。原爆の影響は「その日」だけで終わりませんでした。今も語り部の方々が「二度と繰り返さない」という願いを届け続けています。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">✏️ 読んで感じたこと</div>
+    <div class="think-prompt">当時、広島に住んでいたのはあなたと同じ年代の子もいた。その子たちは何を見て、何を感じたのだろう？</div>
+    <div class="q-group" style="margin-bottom:12px;">
+      <label class="q-label">初めて知ったこと・驚いたことはありましたか？</label>
+      <textarea class="write-box" rows="2" placeholder="正直な気持ちを書いてみよう..."></textarea>
+    </div>
+    <div class="q-group" style="margin-bottom:12px;">
+      <label class="q-label">もし自分がその時代にいたら、どんな気持ちだったと思う？</label>
+      <textarea class="write-box" rows="3" placeholder="想像してみよう..."></textarea>
+    </div>
+    <div class="deep-q">「知ること」と「感じること」はどう違うと思う？広島に行くことで、どちらができると思う？</div>
+    <label class="q-label">現地で確かめたいこと・聞いてみたいことを書いておこう</label>
+    <textarea class="write-box" rows="2" placeholder="疑問はメモしておこう！"></textarea>
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" onclick="goPrev()">← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">4 / 12</span>
+    <button class="nav-footer-btn" onclick="goNext()">次へ →</button>
+  </div>
+</div>
+</div>
+
+<!-- ===========================
+     PAGE 5: 行く場所を調べよう
+     =========================== -->
+<div id="pg4" class="page">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--green-light);">
+    <span class="page-icon">🗺️</span>
+    <div class="page-num-label"><span class="badge badge-pre">事前学習</span> &nbsp;ページ 5</div>
+    <div class="page-title" style="color:#173404;">行く場所を調べよう</div>
+    <div class="page-sub" style="color:var(--green);">「何を見たいか」「何を感じたいか」を事前に書いておこう</div>
+  </div>
+
+  <div class="spot-card">
+    <div class="spot-header">
+      <div class="spot-icon" style="background:var(--red-light);">🏛️</div>
+      <div><div class="spot-name">原爆ドーム</div><div class="spot-desc">爆心地から約160m・世界遺産。爆発の熱でほぼ全壊しながら骨組みだけが残った建物。</div></div>
+    </div>
+    <div class="spot-story">爆発の衝撃で建物のほとんどは崩れ落ちたが、爆風がほぼ真上から来たため、この建物の鉄骨だけが残った。当時の姿のまま保存されている。</div>
+    <label class="q-label">ここで何を見たい？</label>
+    <input type="text" class="write-line" placeholder="例：残された壁の様子、大きさの感覚...">
+    <label class="q-label">何を感じたい？どんなことを考えたい？</label>
+    <input type="text" class="write-line" placeholder="例：あの日の空気を感じたい...">
+  </div>
+
+  <div class="spot-card">
+    <div class="spot-header">
+      <div class="spot-icon" style="background:var(--blue-light);">📖</div>
+      <div><div class="spot-name">平和記念資料館</div><div class="spot-desc">原爆の記録・遺品・体験談などが展示。被爆直後の広島の様子を詳しく知れる。</div></div>
+    </div>
+    <div class="spot-story">焼け焦げたお弁当箱、溶けた瓶、亡くなった子どもの服……。ものが語る「あの日」を体感できる場所。</div>
+    <label class="q-label">ここで何を見たい？</label>
+    <input type="text" class="write-line" placeholder="例：実際に使われていたもの、写真...">
+    <label class="q-label">何を感じたい？どんなことを考えたい？</label>
+    <input type="text" class="write-line" placeholder="例：当時の人の気持ちを知りたい...">
+  </div>
+
+  <div class="spot-card">
+    <div class="spot-header">
+      <div class="spot-icon" style="background:var(--green-light);">🌿</div>
+      <div><div class="spot-name">平和記念公園</div><div class="spot-desc">原爆死没者の慰霊と世界平和を祈念して作られた公園。慰霊碑には名前が刻まれている。</div></div>
+    </div>
+    <label class="q-label">ここで何を見たい？</label>
+    <input type="text" class="write-line" placeholder="...">
+    <label class="q-label">何を感じたい？どんなことを考えたい？</label>
+    <input type="text" class="write-line" placeholder="...">
+  </div>
+
+  <div class="spot-card">
+    <div class="spot-header">
+      <div class="spot-icon" style="background:var(--purple-light);">🐦</div>
+      <div><div class="spot-name">原爆の子の像（佐々木禎子さん）</div><div class="spot-desc">原爆で亡くなった子どもたちを慰める像。禎子さんの願いが世界へ。</div></div>
+    </div>
+    <div class="spot-story">2歳の時に被爆した禎子さんは12歳で白血病に。「1000羽折れば病気が治る」と信じ折り続けた鶴。その願いは今も世界中から届く折り鶴として引き継がれている。</div>
+    <label class="q-label">禎子さんのことを知って、どう感じる？</label>
+    <input type="text" class="write-line" placeholder="...">
+    <label class="q-label">像の前で、何を思いたい？</label>
+    <input type="text" class="write-line" placeholder="...">
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" onclick="goPrev()">← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">5 / 12</span>
+    <button class="nav-footer-btn" onclick="goNext()">次へ →</button>
+  </div>
+</div>
+</div>
+
+<!-- ===========================
+     PAGE 6: 探究テーマ
+     =========================== -->
+<div id="pg5" class="page">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--pink-light);">
+    <span class="page-icon">🔎</span>
+    <div class="page-num-label"><span class="badge badge-pre">事前学習</span> &nbsp;ページ 6</div>
+    <div class="page-title" style="color:#4B1528;">私だけの探究テーマ</div>
+    <div class="page-sub" style="color:var(--pink);">自分が一番気になることを「テーマ」にしよう</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💡 テーマの例（タップして選ぶ or 自分で書く）</div>
+    <div class="theme-chips" id="theme-chips">
+      <button class="theme-chip" onclick="pickTheme(this)">🕊️ 平和とは何だろう？</button>
+      <button class="theme-chip" onclick="pickTheme(this)">👦 子どもたちはどんな生活をしていた？</button>
+      <button class="theme-chip" onclick="pickTheme(this)">🏙️ 広島はどう復興した？</button>
+      <button class="theme-chip" onclick="pickTheme(this)">🌍 今も戦争はなくなったの？</button>
+      <button class="theme-chip" onclick="pickTheme(this)">❤️ 私にできる平和とは？</button>
+      <button class="theme-chip" onclick="pickTheme(this)">👤 被爆者の思いを知りたい</button>
+      <button class="theme-chip" onclick="pickTheme(this)">🔗 戦争と今の社会のつながりは？</button>
+      <button class="theme-chip" onclick="pickTheme(this)">🌱 未来に平和を続けるには？</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">✏️ 私のテーマ</div>
+    <label class="q-label">探究テーマ（自分の言葉で書こう）</label>
+    <textarea id="my-theme" class="write-box" rows="2" style="font-size:16px;font-weight:700;" placeholder="例：原爆は世界をどう変えたのか？"></textarea>
+    <label class="q-label" style="margin-top:12px;">このテーマを選んだ理由</label>
+    <textarea class="write-box" rows="2" placeholder="なぜこれが気になるの？正直に書いてみよう..."></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎯 旅で確かめたいこと</div>
+    <div class="think-prompt">テーマを「深める」ためには、ただ見るだけでなく「問い」を持って行くことが大切。事前に疑問を書いておくと、現地での気づきが増える！</div>
+    <label class="q-label">テーマについて、広島で知りたいこと・見たいこと・聞きたいことを書こう</label>
+    <textarea class="write-box" rows="4" placeholder="例：&#10;・資料館でどんな展示を見ればいいか&#10;・語り部さんに何を聞けばいいか&#10;・どの場所に行けばヒントがあるか"></textarea>
+    <div class="deep-q">テーマについて「調べれば分かること」と「行かないと分からないこと」はそれぞれ何だと思う？</div>
+    <label class="q-label">行かないと分からないこと（現地でしか感じられないこと）</label>
+    <textarea class="write-box" rows="2" placeholder="..."></textarea>
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" onclick="goPrev()">← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">6 / 12</span>
+    <button class="nav-footer-btn" onclick="goNext()">次へ →</button>
+  </div>
+</div>
+</div>
+
+<!-- ===========================
+     PAGE 7: 折り鶴に込める願い
+     =========================== -->
+<div id="pg6" class="page">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--purple-light);">
+    <span class="page-icon">🕊️</span>
+    <div class="page-num-label"><span class="badge badge-pre">事前学習</span> &nbsp;ページ 7</div>
+    <div class="page-title" style="color:#26215C;">折り鶴に込める願い</div>
+    <div class="page-sub" style="color:var(--purple);">あなたの心を、一枚の紙に込めよう</div>
+  </div>
+
+  <div class="card" style="border:2px solid #CECBF6;">
+    <div class="card-title" style="color:var(--purple);">🐦 佐々木禎子さんのことを知っているかな？</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <div style="background:var(--purple-light);border-radius:10px;padding:14px;">
+        <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:6px;letter-spacing:0.05em;">📅 生まれ</div>
+        <div style="font-size:14px;color:#3C3489;font-weight:700;">1943年（昭和18年）</div>
+        <div style="font-size:12px;color:#534AB7;margin-top:2px;">広島市で生まれる</div>
+      </div>
+      <div style="background:#FCEBEB;border-radius:10px;padding:14px;">
+        <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px;letter-spacing:0.05em;">💥 被爆</div>
+        <div style="font-size:14px;color:#501313;font-weight:700;">1945年8月6日（2歳）</div>
+        <div style="font-size:12px;color:var(--red);margin-top:2px;">爆心地から約1.6km</div>
+      </div>
+      <div style="background:#FAEEDA;border-radius:10px;padding:14px;">
+        <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:6px;letter-spacing:0.05em;">🏃 小学生の禎子さん</div>
+        <div style="font-size:13px;color:#412402;line-height:1.6;">元気で足の速い女の子。運動会でも大活躍するほどだった。</div>
+      </div>
+      <div style="background:var(--red-light);border-radius:10px;padding:14px;">
+        <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px;letter-spacing:0.05em;">🏥 発病（12歳）</div>
+        <div style="font-size:13px;color:#501313;line-height:1.6;">1954年、白血病と診断。放射線の影響だった。</div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#EEEDFE,#E1F5EE);border-radius:12px;padding:16px;margin-bottom:14px;">
+      <div style="font-size:13px;font-weight:700;color:#3C3489;margin-bottom:8px;">🕊️ 1000羽の鶴</div>
+      <div style="font-size:13px;color:#085041;line-height:1.9;">
+        「千羽鶴を折れば病気が治る」という言い伝えを信じた禎子さんは、入院しながら折り続けた。<br>
+        薬の包み紙、お見舞いの包装紙……小さな紙を見つけては折った。<br>
+        1000羽を超えても折り続け、最終的に<strong>約1400羽</strong>折ったとされる。<br>
+        しかし1955年10月25日、12歳でその命を閉じた。
+      </div>
+    </div>
+
+    <div style="background:#E1F5EE;border-radius:10px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:6px;">🌍 禎子さんの願いは今も続く</div>
+      <div style="font-size:13px;color:#085041;line-height:1.8;">
+        禎子さんの友人たちが呼びかけ、世界中の子どもたちの募金で「原爆の子の像」が建立された（1958年）。<br>
+        今も毎年、世界中から約1000万羽の折り鶴が届けられている。
+      </div>
+    </div>
+
+    <div style="background:#fffbf0;border:1.5px solid #FAEEDA;border-radius:10px;padding:12px 14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:8px;">✏️ 禎子さんのことを知って、考えたこと</div>
+      <label class="q-label">禎子さんはあなたと同じ中学生になる前に亡くなった。それを知って、何を感じる？</label>
+      <textarea class="write-box" rows="3" placeholder="正直な気持ちを書いてみよう..."></textarea>
+      <label class="q-label" style="margin-top:10px;">あなたが折る鶴に、禎子さんへのメッセージを込めるとしたら？</label>
+      <textarea class="write-box" rows="2" placeholder="..."></textarea>
+    </div>
+  </div>
+
+  <div class="crane-box">
+    <div style="font-size:16px;font-weight:700;color:#3C3489;margin-bottom:8px;">🕊️ あなたの鶴</div>
+    <div style="font-size:14px;color:#3C3489;line-height:1.8;">
+      禎子さんが折り続けた鶴。その願いは世界へ広まり、今も多くの人が平和への祈りを込めて折り続けています。<br>
+      あなたが折る一羽の鶴も、長い「平和の連鎖」の一部になります。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">👥 誰のために折る？</div>
+    <div class="think-prompt">「誰かのために」折ると、その気持ちが鶴に込められる。亡くなった命、今も苦しむ人、未来の子どもたち……誰の顔が浮かぶ？</div>
+    <textarea class="write-box" rows="3" placeholder="亡くなった命のために、未来の子どもたちのために、大切な人のために...自由に書いてみよう"></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title">❤️ どんな願いを込める？</div>
+    <textarea class="write-box" rows="3" placeholder="戦争がなくなりますように、誰もが笑って生きられますように..."></textarea>
+  </div>
+
+  <div class="card" style="border:2px dashed var(--purple-mid);">
+    <div class="card-title" style="color:var(--purple);">💬 平和へのメッセージ</div>
+    <div style="font-size:13px;color:var(--text-sub);margin-bottom:10px;line-height:1.6;">鶴に添えるとしたら、何を伝えますか？<br>短くても長くてもいい。あなた自身の言葉で。</div>
+    <textarea class="write-box" rows="5" style="font-size:15px;" placeholder="「あなたへ」「未来の君へ」「広島で出会った命へ」——どんな書き出しでも。"></textarea>
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" onclick="goPrev()">← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">7 / 12</span>
+    <button class="nav-footer-btn" onclick="goNext()">次へ →</button>
+  </div>
+</div>
+</div>
+
+<!-- ===========================
+     PAGE 8: 現地での学びノート
+     =========================== -->
+<div id="pg7" class="page">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--amber-light);">
+    <span class="page-icon">📓</span>
+    <div class="page-num-label"><span class="badge badge-local">現地</span> &nbsp;ページ 8</div>
+    <div class="page-title" style="color:#412402;">現地での学びノート</div>
+    <div class="page-sub" style="color:var(--amber);">感じたこと、気づいたこと、何でもメモしよう</div>
+  </div>
+
+  <div style="background:var(--amber-light);border-radius:12px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:var(--amber);line-height:1.7;">
+    ⚡ 「後で書こう」は忘れのもと！感じたそのとき、その場でメモしよう。汚い字でもOK。
+  </div>
+
+  <div class="memo-row">
+    <div class="memo-icon">😮</div>
+    <div style="flex:1;">
+      <label class="q-label">驚いたこと</label>
+      <textarea class="write-box" rows="3" placeholder="想像と違ったこと、初めてリアルに感じたこと..."></textarea>
+    </div>
+  </div>
+  <div class="memo-row">
+    <div class="memo-icon">💭</div>
+    <div style="flex:1;">
+      <label class="q-label">心に残ったこと</label>
+      <textarea class="write-box" rows="3" placeholder="ずっと忘れられないかも、と思ったこと..."></textarea>
+    </div>
+  </div>
+  <div class="memo-row">
+    <div class="memo-icon">💡</div>
+    <div style="flex:1;">
+      <label class="q-label">初めて知ったこと</label>
+      <textarea class="write-box" rows="3" placeholder="教科書では知らなかったこと..."></textarea>
+    </div>
+  </div>
+  <div class="memo-row">
+    <div class="memo-icon">💬</div>
+    <div style="flex:1;">
+      <label class="q-label">印象に残った言葉（誰が言ったか書いておこう）</label>
+      <textarea class="write-box" rows="3" placeholder="例：語り部さんが「...」とおっしゃっていた。ガイドさんの..."></textarea>
+    </div>
+  </div>
+  <div class="memo-row">
+    <div class="memo-icon">🤔</div>
+    <div style="flex:1;">
+      <label class="q-label">一番考えさせられたこと</label>
+      <textarea class="write-box" rows="3" placeholder="答えが出なくていい。考えたことを書こう..."></textarea>
+    </div>
+  </div>
+  <div class="memo-row">
+    <div class="memo-icon">❓</div>
+    <div style="flex:1;">
+      <label class="q-label">ガイドさん・語り部さんへ質問したこと / 答え</label>
+      <textarea class="write-box" rows="3" placeholder="聞いてよかった質問と、返ってきた答えを書いておこう..."></textarea>
+    </div>
+  </div>
+  <div class="memo-row">
+    <div class="memo-icon">🪞</div>
+    <div style="flex:1;">
+      <label class="q-label">今の自分の日常との違い・気づいたこと</label>
+      <textarea class="write-box" rows="3" placeholder="自分の毎日と比べてみたら..."></textarea>
+    </div>
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" onclick="goPrev()">← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">8 / 12</span>
+    <button class="nav-footer-btn" onclick="goNext()">次へ →</button>
+  </div>
+</div>
+</div>
+
+<!-- ===========================
+     PAGE 9: 現地でのマナー
+     =========================== -->
+<div id="pg8" class="page">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--teal-light);">
+    <span class="page-icon">🙏</span>
+    <div class="page-num-label"><span class="badge badge-local">現地</span> &nbsp;ページ 9</div>
+    <div class="page-title" style="color:#04342C;">現地でのマナー</div>
+    <div class="page-sub" style="color:var(--teal);">慰霊の場所を、敬意を持って歩こう</div>
+  </div>
+
+  <div class="info-block" style="background:var(--teal-light);border-color:var(--teal);color:#085041;">
+    平和記念公園や原爆ドームは「観光地」ではなく、亡くなった方々を追悼する<strong>慰霊の場所</strong>です。心を整えて訪れましょう。
+  </div>
+
+  <div class="card">
+    <div id="manners">
+      <div class="manner-item" onclick="toggleCheck(this)">
+        <div class="manner-check">✓</div>
+        <div><div class="manner-text">静かに、落ち着いた声で話す</div><div class="manner-sub">大声や笑い声は慎みましょう。その場の空気を感じることも大切な学習。</div></div>
+      </div>
+      <div class="manner-item" onclick="toggleCheck(this)">
+        <div class="manner-check">✓</div>
+        <div><div class="manner-text">ふざけた写真・動画を撮らない</div><div class="manner-sub">記念写真は場所の意味を考えて。写真より「この目で見る」ことを大切に。</div></div>
+      </div>
+      <div class="manner-item" onclick="toggleCheck(this)">
+        <div class="manner-check">✓</div>
+        <div><div class="manner-text">時間を守り、集合に遅れない</div><div class="manner-sub">仲間や引率の先生に迷惑をかけないよう。チームで動いていることを意識する。</div></div>
+      </div>
+      <div class="manner-item" onclick="toggleCheck(this)">
+        <div class="manner-check">✓</div>
+        <div><div class="manner-text">仲間と協力し、助け合う</div><div class="manner-sub">困っている人がいたら声をかける。チームとして行動しよう。</div></div>
+      </div>
+      <div class="manner-item" onclick="toggleCheck(this)">
+        <div class="manner-check">✓</div>
+        <div><div class="manner-text">こまめに水分補給・体調管理をする</div><div class="manner-sub">特に夏は熱中症に注意。体が元気でないと学べない。自分の体を大切に。</div></div>
+      </div>
+      <div class="manner-item" onclick="toggleCheck(this)">
+        <div class="manner-check">✓</div>
+        <div><div class="manner-text">展示物・遺品には触らない</div><div class="manner-sub">大切に保存されている遺品や資料。次の世代にも伝えるために守られています。</div></div>
+      </div>
+      <div class="manner-item" onclick="toggleCheck(this)">
+        <div class="manner-check">✓</div>
+        <div><div class="manner-text">スマホは学習のためだけに使う</div><div class="manner-sub">SNSチェックや関係ない動画は現地ではやめよう。せっかくの時間を大切に。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">✏️ 自分なりに気をつけたいこと</div>
+    <div class="think-prompt">「マナーを守る」のは最低限。それより大切なのは「この場所に何をしに来たか」を忘れないこと。</div>
+    <textarea class="write-box" rows="3" placeholder="このリスト以外で、自分が意識したいことを書いておこう..."></textarea>
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" onclick="goPrev()">← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">9 / 12</span>
+    <button class="nav-footer-btn" onclick="goNext()">次へ →</button>
+  </div>
+</div>
+</div>
+
+<!-- ===========================
+     PAGE 10: 帰ってきた後
+     =========================== -->
+<div id="pg9" class="page">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--coral-light);">
+    <span class="page-icon">🌅</span>
+    <div class="page-num-label"><span class="badge badge-post">事後学習</span> &nbsp;ページ 10</div>
+    <div class="page-title" style="color:#4A1B0C;">帰ってきた後</div>
+    <div class="page-sub" style="color:var(--coral);">旅の前と後で、あなたは変わった？</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">❤️ 一番心に残ったこと</div>
+    <div class="think-prompt">「心に残った」というのは、何かがあなたの中で動いたということ。それは何だったの？</div>
+    <textarea class="write-box" rows="4" placeholder="旅全体を通して、最も印象に残ったシーン・言葉・出来事は..."></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔄 旅の前と後で変わったこと</div>
+    <div class="grid-2" style="margin-bottom:12px;">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:6px;">← 旅の前の自分</div>
+        <textarea class="write-box" rows="5" placeholder="平和についての考え、広島のイメージ..."></textarea>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--coral);margin-bottom:6px;">→ 旅の後の自分</div>
+        <textarea class="write-box" rows="5" placeholder="今の自分はどう感じている？..."></textarea>
+      </div>
+    </div>
+    <div class="deep-q">「変わった」と感じる部分と「変わっていない」と感じる部分、両方書いてみよう。どちらも正直でOK。</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌟 なぜ自分が選ばれたと思う？（今の答え）</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">ページ2で書いた答えと比べてみよう。変わった？変わっていない？</div>
+    <textarea class="write-box" rows="3" placeholder="旅を経験した今、改めて考えてみよう..."></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💬 家族や友達に伝えたいこと</div>
+    <div class="think-prompt">「広島に行ってきたよ」と話すとしたら、最初の一言は何？その言葉が一番大切なことを映している。</div>
+    <textarea class="write-box" rows="3" placeholder="誰に、何を、どんな言葉で伝えたい？..."></textarea>
+  </div>
+
+  <div class="card" style="border:2px solid var(--teal-light);">
+    <div class="card-title" style="color:var(--teal);">🌿 これから自分にできる平和とは？</div>
+    <div style="font-size:14px;color:var(--text);line-height:1.8;margin-bottom:10px;">平和は特別な場所だけにあるものじゃない。<br>あなたの日常の中にも、平和を作るきっかけはあるはずです。</div>
+    <div class="deep-q">「平和のために何かする」とは、大きなことだけじゃない。明日から学校でできることは？</div>
+    <textarea class="write-box" rows="4" placeholder="具体的なことでいい。小さなことでいい。今の自分に正直に..."></textarea>
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" onclick="goPrev()">← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">10 / 12</span>
+    <button class="nav-footer-btn" onclick="goNext()">次へ →</button>
+  </div>
+</div>
+</div>
+
+<!-- ===========================
+     PAGE 11: 発表準備
+     =========================== -->
+<div id="pg10" class="page">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--blue-light);">
+    <span class="page-icon">🎤</span>
+    <div class="page-num-label"><span class="badge badge-post">事後学習</span> &nbsp;ページ 11</div>
+    <div class="page-title" style="color:#042C53;">発表準備ページ</div>
+    <div class="page-sub" style="color:var(--blue);">学んだことを、みんなへ届けよう</div>
+  </div>
+
+  <div class="card" style="border:2px solid #B5D4F4;">
+    <div class="card-title" style="color:var(--blue);">📐 発表の構成を考えよう</div>
+    <div style="font-size:13px;color:var(--text-sub);margin-bottom:14px;line-height:1.7;">
+      いい発表には「流れ」がある。この構成を参考に、自分なりに組み立ててみよう。
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="min-width:80px;background:var(--blue-light);border-radius:8px;padding:6px 10px;text-align:center;flex-shrink:0;">
+          <div style="font-size:10px;font-weight:700;color:var(--blue);">① つかみ</div>
+          <div style="font-size:10px;color:var(--blue);opacity:0.8;">30秒〜1分</div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">心をつかむ一言・場面から始める</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">「広島で、私は〇〇を見ました」「正直、行く前は〇〇だと思っていました」など、聞いている人が「え、どういうこと？」と思う言葉で始めると引き込まれる。</div>
+          <label class="q-label" style="margin-top:6px;">自分の「つかみ」を書いてみよう</label>
+          <input type="text" class="write-line" placeholder="例：「広島で、私は一枚の写真の前で動けなくなりました」">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="min-width:80px;background:#EAF3DE;border-radius:8px;padding:6px 10px;text-align:center;flex-shrink:0;">
+          <div style="font-size:10px;font-weight:700;color:var(--green);">② 伝える</div>
+          <div style="font-size:10px;color:var(--green);opacity:0.8;">2〜3分</div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">見たこと・感じたこと・気づいたこと</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">事実（何を見たか）＋自分の言葉（どう感じたか）をセットで。「〇〇を見て、私は〇〇と感じた」という形が伝わりやすい。ベスト3を中心に話そう。</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="min-width:80px;background:#FBEAF0;border-radius:8px;padding:6px 10px;text-align:center;flex-shrink:0;">
+          <div style="font-size:10px;font-weight:700;color:var(--pink);">③ 深める</div>
+          <div style="font-size:10px;color:var(--pink);opacity:0.8;">1〜2分</div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">自分の考え・旅の前後の変化</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">「行く前は〇〇と思っていた。でも実際に行ってみて〇〇だと気づいた」——変化を見せると、聞いている人は「自分ならどうだろう」と一緒に考えてくれる。</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="min-width:80px;background:var(--purple-light);border-radius:8px;padding:6px 10px;text-align:center;flex-shrink:0;">
+          <div style="font-size:10px;font-weight:700;color:var(--purple);">④ 締める</div>
+          <div style="font-size:10px;color:var(--purple);opacity:0.8;">30秒〜1分</div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">聞いている人へのメッセージ＋自分の行動宣言</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">「私はこれから〇〇したい」「みなさんにも〇〇してほしい」など、前向きな言葉で終わると印象に残る。</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#f5f5ff;border-radius:10px;padding:14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--purple);margin-bottom:10px;">💡 伝わる発表の5つのポイント</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:8px;align-items:flex-start;">
+          <span style="background:var(--purple);color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">1</span>
+          <div style="font-size:13px;color:var(--text-sub);line-height:1.6;"><strong>「自分の言葉」で話す</strong> ——暗記した文章より、本当に感じた言葉のほうが伝わる</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;">
+          <span style="background:var(--purple);color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">2</span>
+          <div style="font-size:13px;color:var(--text-sub);line-height:1.6;"><strong>具体的な場面・物・言葉を使う</strong> ——「感動した」より「〇〇を見て涙が出そうになった」</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;">
+          <span style="background:var(--purple);color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">3</span>
+          <div style="font-size:13px;color:var(--text-sub);line-height:1.6;"><strong>「自分だから気づけたこと」を入れる</strong> ——同じ場所を見ても、感じ方はひとりひとり違う</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;">
+          <span style="background:var(--purple);color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">4</span>
+          <div style="font-size:13px;color:var(--text-sub);line-height:1.6;"><strong>「聞いている人の日常」につなげる</strong> ——「実は私たちの毎日も…」と身近に引き寄せると刺さる</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;">
+          <span style="background:var(--purple);color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">5</span>
+          <div style="font-size:13px;color:var(--text-sub);line-height:1.6;"><strong>最後は「前を向く言葉」で終わる</strong> ——暗く終わるより、希望のある締めくくりが印象に残る</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🏆 伝えたいことベスト3</div>
+    <div class="think-prompt">「全部伝えたい」は「何も伝わらない」になりやすい。一番大切なことに絞ることが「伝える力」。</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:30px;height:30px;background:#EF9F27;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;">1</div>
+        <div style="flex:1;">
+          <label class="q-label">一番伝えたいこと</label>
+          <input type="text" class="write-line" placeholder="最も大切だと思ったこと...">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:30px;height:30px;background:#888;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;">2</div>
+        <div style="flex:1;">
+          <label class="q-label">二番目に伝えたいこと</label>
+          <input type="text" class="write-line" placeholder="...">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:30px;height:30px;background:#D85A30;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;">3</div>
+        <div style="flex:1;">
+          <label class="q-label">三番目に伝えたいこと</label>
+          <input type="text" class="write-line" placeholder="...">
+        </div>
+      </div>
+    </div>
+    <div class="deep-q">なぜこの3つを選んだ？「自分だから伝えられること」になっている？</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📸 印象に残った写真・場所</div>
+    <label class="q-label">どこ（何）が一番印象に残っている？</label>
+    <input type="text" class="write-line" placeholder="例：平和記念公園の慰霊碑の前、資料館のあの展示...">
+    <label class="q-label">なぜそこが心に残ったの？</label>
+    <textarea class="write-box" rows="3" placeholder="..."></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💌 聞いている人へのメッセージ</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;line-height:1.6;">発表の最後に、あなたの言葉で締めくくろう。<br>スラスラ言える言葉より、本当に感じた言葉が伝わる。</div>
+    <div class="think-prompt">聞いている人が発表を聞いた後、何を感じてほしい？何を考えてほしい？</div>
+    <textarea class="write-box" rows="5" style="font-size:15px;" placeholder="「この旅で私が一番伝えたいのは...」から始めてみよう"></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🚀 これからの自分の行動</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">発表は「伝える」。でも本当の続きは「行動」。</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div><label class="q-label">行動① （いつ・何を）</label><input type="text" class="write-line" placeholder="例：明日のクラスで..."></div>
+      <div><label class="q-label">行動②</label><input type="text" class="write-line" placeholder="例：家族に話す..."></div>
+      <div><label class="q-label">行動③</label><input type="text" class="write-line" placeholder="例：これからも..."></div>
+    </div>
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" onclick="goPrev()">← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">11 / 12</span>
+    <button class="nav-footer-btn" onclick="goNext()">最後のページへ →</button>
+  </div>
+</div>
+</div>
+
+<!-- ===========================
+     PAGE 12: 締めくくり
+     =========================== -->
+<div id="pg11" class="page">
+<div class="page-inner">
+  <div class="page-header" style="background:var(--purple-light);">
+    <span class="page-icon">✨</span>
+    <div class="page-num-label"><span class="badge badge-post">締めくくり</span></div>
+    <div class="page-title" style="color:#26215C;">広島で学んだことを、<br>これからの自分へ</div>
+  </div>
+
+  <div class="closing-card">
+    <div class="closing-big">🕊️ あなたは、つなぐ人</div>
+    <div class="closing-text">
+      「選ばれたから行く」のではなく、<br>
+      あなたが感じたこと・学んだことを、<br>
+      次の誰かへとつなぐ役割を持って帰ってきた。<br><br>
+      平和は、遠い場所の話ではありません。<br>
+      毎日の思いやり、誰かへの一言、<br>
+      そのひとつひとつが、平和の始まりです。
+    </div>
+  </div>
+
+  <div class="card" style="border:2px dashed var(--purple-mid);">
+    <div class="card-title" style="color:var(--purple);">📝 広島で学んだことを、自分の人生にどう生かすか</div>
+    <div class="think-prompt">10年後の自分が、このページを読んだとき、何を思ってほしい？</div>
+    <label class="q-label">未来の自分へ一言。広島で感じたこと、忘れないように。</label>
+    <textarea class="write-box" rows="6" style="font-size:15px;" placeholder="未来の自分へ..."></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⭐ この旅にタイトルをつけよう</div>
+    <label class="q-label">あなたの旅を一言で表すなら？</label>
+    <input type="text" class="write-line" style="font-size:20px;font-weight:700;" placeholder='例：「命の重さを知った旅」'>
+    <label class="q-label" style="margin-top:10px;">そのタイトルを選んだ理由</label>
+    <textarea class="write-box" rows="2" placeholder="..."></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔄 ページ1と比べよう</div>
+    <div style="font-size:14px;color:var(--text-sub);margin-bottom:10px;line-height:1.7;">ページ1で書いた「平和とは何か」を見返してみよう。今の自分はどう答える？</div>
+    <label class="q-label">旅を終えた今、「平和」とは何だと思う？</label>
+    <textarea class="write-box" rows="4" placeholder="ページ1と比べながら書いてみよう..."></textarea>
+  </div>
+
+  <div style="text-align:center;margin-top:24px;padding:20px;">
+    <div style="font-size:40px;margin-bottom:12px;">🕊️</div>
+    <div style="font-size:15px;color:var(--text-sub);line-height:2.0;">あなたの学びが、<br>誰かの明日をやさしくする。</div>
+  </div>
+
+  <div class="nav-footer">
+    <button class="nav-footer-btn" onclick="goPrev()">← 前へ</button>
+    <span style="font-size:12px;color:var(--text-muted);">12 / 12</span>
+    <button class="nav-footer-btn" onclick="window.print()">🖨️ 印刷する</button>
+  </div>
+</div>
+</div>
+
+<script>
+var current = 0;
+var total = 12;
+
+function showPage(n, btn) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('visible'); });
+  document.getElementById('pg' + n).classList.add('visible');
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  current = n;
+  window.scrollTo(0, 0);
+}
+
+function goNext() {
+  if (current < total - 1) {
+    var btns = document.querySelectorAll('.nav-btn');
+    showPage(current + 1, btns[current + 1]);
+  }
+}
+function goPrev() {
+  if (current > 0) {
+    var btns = document.querySelectorAll('.nav-btn');
+    showPage(current - 1, btns[current - 1]);
+  }
+}
+
+function toggleCheck(item) {
+  var chk = item.querySelector('.manner-check');
+  chk.classList.toggle('checked');
+}
+
+function pickTheme(el) {
+  el.classList.toggle('picked');
+  var themeArea = document.getElementById('my-theme');
+  var picked = [];
+  document.querySelectorAll('.theme-chip.picked').forEach(function(c) {
+    picked.push(c.textContent.trim());
+  });
+  if (picked.length > 0 && themeArea.value === '') {
+    themeArea.value = picked[0];
+  }
+}
+</script>
+</body>
+</html>
